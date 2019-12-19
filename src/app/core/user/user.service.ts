@@ -8,6 +8,7 @@ import * as jwt_decoder from 'jwt-decode';
 export class UserService {
     private userSubject = new BehaviorSubject<User>(null);
     private userName: string;
+    private user: User;
 
     constructor(private tokenService: TokenService) {
         // tslint:disable-next-line: no-unused-expression
@@ -27,6 +28,7 @@ export class UserService {
     private decodeAndNotify() {
         const token = this.tokenService.getToken();
         const user = jwt_decoder(token) as User;
+        this.user = user;
         this.userName = user.name;
         this.userSubject.next(user);
     }

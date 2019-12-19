@@ -5,6 +5,6 @@ export interface Photo {
     description: string;
     allowCommnets: boolean;
     likes: number;
-    commnets: number;
+    comments: number;
     userId: number;
 }
