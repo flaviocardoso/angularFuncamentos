@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { lowerCaseValidator } from 'src/app/shared/validators/lower-case';
 import { UserNotTakenValidatorService } from './user-not-taken.validator.service';
 import { NewUser } from './new-user';
 import { SignupService } from './signup.service';
 import { PlataformDetectorService } from 'src/app/core/plataform-detector/plataform-detector.service';
+import { userNamePasswordValidator } from './username-password.validator';
 
 @Component({
     selector: 'ap-signout',
@@ -13,6 +14,7 @@ import { PlataformDetectorService } from 'src/app/core/plataform-detector/plataf
     providers: [UserNotTakenValidatorService]
 })
 export class SignupComponent implements OnInit {
+
     signupForm: FormGroup;
     @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
 
@@ -55,16 +57,22 @@ export class SignupComponent implements OnInit {
                     Validators.maxLength(14)
                 ]
             ]
-        });
+        },
+        {
+            validator:  userNamePasswordValidator
+        }
+        );
     }
 
     signup () {
-        const newUser = this.signupForm.getRawValue() as NewUser;
-        this.signupService
-            .signup(newUser)
-            .subscribe(
-                () => this.router.navigate(['']),
-                err => console.log(err));
+        if (this.signupForm.valid && !this.signupForm.pending) {
+            const newUser = this.signupForm.getRawValue() as NewUser;
+            this.signupService
+                .signup(newUser)
+                .subscribe(
+                    () => this.router.navigate(['']),
+                    err => console.log(err));
+        }
     }
 
     private recarrega (): void {
